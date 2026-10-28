@@ -102,9 +102,6 @@ main.wide{max-width:1200px}
 #mkmap circle.mk.ours{stroke:#b07d00;stroke-opacity:1;stroke-width:2}
 #mkmap circle.mk.sel{stroke:#0b0b0b;stroke-opacity:1;stroke-width:3}
 #mkmap .off{display:none}
-#mkmap text.lbl{display:none;fill:#1d2733;stroke:#fcfcfb;paint-order:stroke;stroke-linejoin:round;pointer-events:none;font-weight:600}
-#mkmap.zoomed text.lbl{display:inline}
-#mkmap.zoomed text.lbl.off{display:none}
 .legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.78rem;color:var(--gray);margin:8px 0 4px}
 .legend .lt{font-weight:600;color:#1d2733;width:100%}
 .legend .sw{display:inline-flex;align-items:center;gap:4px}
