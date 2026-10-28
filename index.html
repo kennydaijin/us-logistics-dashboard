@@ -11,7 +11,13 @@
 <header class="top"><h1>米国物流マーケット</h1></header>
 <main>
 <input id="q" class="search" type="search" placeholder="都市名・地名で検索（例：ダラス、Pooler）" aria-label="都市検索">
-<section class="region">
+<section class="region national">
+<h2>全米</h2>
+<ul class="city-list nat">
+<li data-search="全米 united states us national 全国"><a href="city/us.html"><span class="ja">全米</span><span class="en">マクロ・全米レポート・ニュース</span><span class="upd">更新 2026/10/28</span></a></li>
+<li data-search="主要マーケット一覧 markets 市場 一覧 空室率 賃料"><a href="city/us.html#markets"><span class="ja">主要マーケット一覧</span><span class="en">全米の主要市場の空室率・賃料など（C&amp;W）</span></a></li>
+</ul>
+</section><section class="region">
 <h2>西部</h2>
 <ul class="city-list">
 <li data-search="インランドエンパイア inland empire, ca inland empire ontario fontana rialto riverside san bernardino moreno valley perris chino victorville"><a href="city/inland-empire.html"><span class="ja">インランドエンパイア</span><span class="en">Inland Empire, CA</span><span class="upd">更新 2026/10/27</span></a></li>
@@ -58,7 +64,7 @@
 </section>
 <p id="none" class="muted" hidden>該当する都市がありません。</p>
 </main>
-<footer class="foot">ページ作成 2026/10/28 23:35（日本時間）<br>保存済みのデータのみを表示しています。</footer>
+<footer class="foot">ページ作成 2026/10/29 00:14（日本時間）<br>保存済みのデータのみを表示しています。</footer>
 <script>const q=document.getElementById('q');q.addEventListener('input',()=>{const t=q.value.trim().toLowerCase();let n=0;document.querySelectorAll('.city-list li').forEach(li=>{const ok=!t||li.dataset.search.includes(t);li.hidden=!ok;if(ok)n++;});document.querySelectorAll('.region').forEach(s=>{s.hidden=![...s.querySelectorAll('li')].some(li=>!li.hidden);});document.getElementById('none').hidden=n>0;});</script>
 </body>
 </html>

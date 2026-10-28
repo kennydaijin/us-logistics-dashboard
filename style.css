@@ -61,3 +61,30 @@ section h2{font-size:1.05rem;color:var(--navy);margin:24px 0 8px;border-left:4px
 .muted{color:var(--gray)}
 .small{font-size:.8rem}
 .foot{max-width:880px;margin:0 auto;padding:16px;font-size:.75rem;color:var(--gray);border-top:1px solid var(--line)}
+main.wide{max-width:1200px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:2px solid var(--navy);position:sticky;top:0;background:#fff;z-index:5;padding-top:4px}
+.tabs button{flex:1;padding:10px 8px;font-size:1rem;border:0;background:var(--soft);color:var(--navy);font-weight:600;min-height:48px;cursor:pointer;border-radius:8px 8px 0 0}
+.tabs button[aria-selected=true]{background:var(--navy);color:#fff}
+.mk-tools{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:8px 0}
+.mk-tools .search{margin:0;flex:1 1 220px}
+.tablewrap{overflow:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:8px;max-height:75vh}
+.markets{border-collapse:separate;border-spacing:0;font-size:.82rem;white-space:nowrap;width:100%}
+.markets th,.markets td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;background:#fff}
+.markets thead th{position:sticky;top:0;background:var(--navy);color:#fff;font-weight:600;cursor:pointer;z-index:2;white-space:normal;min-width:5.5em;vertical-align:bottom;line-height:1.3}
+.markets thead th:first-child{left:0;z-index:3;text-align:left}
+.markets tbody th{text-align:left;position:sticky;left:0;font-weight:600;z-index:1;min-width:9em;max-width:12em;white-space:normal;line-height:1.35}
+.markets tr.national th,.markets tr.national td,.markets tr.region th,.markets tr.region td{background:var(--soft)}
+.markets tr.national th,.markets tr.national td{font-weight:700}
+.markets tbody.agg tr:last-child th,.markets tbody.agg tr:last-child td{border-bottom:2px solid var(--navy)}
+.markets tr.ours th,.markets tr.ours td{background:#eef4fb}
+.markets th[aria-sort=ascending]::after{content:" ▲"}
+.markets th[aria-sort=descending]::after{content:" ▼"}
+.ours-mark{color:#b07d00;margin-left:4px}
+.companies{list-style:none;margin:0;padding:0}
+.companies li{border-bottom:1px solid var(--line);padding:8px 0}
+.companies li:last-child{border-bottom:0}
+.companies .cname{font-weight:600}
+.companies p{margin:2px 0;font-size:.9rem}
+.rank{display:inline-block;background:var(--navy);color:#fff;font-size:.72rem;border-radius:4px;padding:0 6px;margin-right:6px;vertical-align:1px}
+.co-list summary .co{min-width:auto}
+.sub-form{margin-top:6px}
