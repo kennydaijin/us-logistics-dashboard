@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>全米｜米国物流マーケット</title>
-<link rel="stylesheet" href="../style.css?v=11c464d3f7">
+<link rel="stylesheet" href="../style.css?v=fb2148d3b5">
 </head>
 <body>
 <header class="top city"><a class="back" href="../index.html">← 都市一覧</a>
@@ -309,7 +309,7 @@ segs.forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
 let metric='vacancy',sel=null,vb=[0,0,W,H];
 const color=(d,v)=>v==null||!isFinite(v)?'#d5d8dc':d.colors[d.bins.filter(b=>v>=b).length];
 const paint=()=>{const d=M[metric];circles.forEach(c=>c.setAttribute('fill',color(d,D.data[+c.dataset.i]['m_'+metric])));
-leg.innerHTML='<span class="lt">円の色：'+d.label+'</span>'+d.colors.map((c,i)=>'<span class="sw"><i style="background:'+c+'"></i>'+d.names[i]+'</span>').join('')+'<span class="sw"><i style="background:#d5d8dc"></i>データなし</span><span class="sw"><i class="ring"></i>★ダッシュボードの都市</span>';};
+leg.innerHTML='<span class="lt">円の色：'+d.label+'</span>'+d.colors.map((c,i)=>'<span class="sw"><i style="background:'+c+'"></i>'+d.names[i]+'</span>').join('')+'<span class="sw"><i style="background:#d5d8dc"></i>データなし</span>';};
 document.querySelectorAll('[data-metric]').forEach(b=>b.addEventListener('click',()=>{metric=b.dataset.metric;document.querySelectorAll('[data-metric]').forEach(x=>x.setAttribute('aria-pressed',x===b));paint();if(sel!=null)show(sel);}));
 const apply=()=>{svg.setAttribute('viewBox',vb.join(' '));const z=W/vb[2],px=vb[2]/(svg.clientWidth||W);
 circles.forEach(c=>c.setAttribute('r',(+c.dataset.r/Math.sqrt(z)).toFixed(2)));
