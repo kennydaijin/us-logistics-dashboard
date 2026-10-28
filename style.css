@@ -95,8 +95,8 @@ main.wide{max-width:1200px}
 .chips button{border:1px solid var(--line);background:#fff;color:#1d2733;border-radius:999px;padding:4px 12px;font-size:.82rem;min-height:34px;cursor:pointer}
 .chips button[aria-pressed=true]{border-color:var(--navy);background:var(--navy);color:#fff}
 .mapwrap{border:1px solid var(--line);border-radius:8px;background:#fcfcfb;overflow:hidden}
-#mkmap{display:block;width:100%;height:auto;touch-action:pan-y;user-select:none;-webkit-user-select:none}
-#mkmap.zoomed{touch-action:none}
+#mkmap{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none}
+.chips .zbtn{min-width:40px;font-size:1rem;font-weight:700;padding:2px 10px}
 #mkmap .states path{fill:#f3f4f6;stroke:#c3c8cf;stroke-width:.8;vector-effect:non-scaling-stroke}
 #mkmap circle.mk{stroke:#152a46;stroke-opacity:.55;stroke-width:1;vector-effect:non-scaling-stroke;fill-opacity:.92}
 #mkmap circle.mk.sel{stroke:#0b0b0b;stroke-opacity:1;stroke-width:3}
