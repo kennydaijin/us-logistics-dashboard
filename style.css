@@ -120,6 +120,7 @@ main.wide{max-width:1200px}
 .seg3.small button{padding:4px 10px;font-size:.8rem;min-height:32px}
 .pill{border:1px solid var(--line);background:#fff;color:var(--gray);border-radius:999px;padding:3px 12px;font-size:.8rem;min-height:30px;cursor:pointer;align-self:flex-start}
 .legend i.ln{width:16px;height:3px;border:0;border-radius:2px}
+.legend i.ln.dash{background:repeating-linear-gradient(90deg,#2a78d6 0 5px,transparent 5px 8px)}
 .legend i.sym{width:9px;height:9px;border-radius:0;border:0}
 .legend i.dia{background:#8a8986;transform:rotate(45deg)}
 .legend i.dia.hollow{background:#fff;border:1.5px dashed #8a8986}

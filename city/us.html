@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>全米｜米国物流マーケット</title>
-<link rel="stylesheet" href="../style.css?v=8fce29f5c8">
+<link rel="stylesheet" href="../style.css?v=c887384719">
 </head>
 <body>
 <header class="top city"><a class="back" href="../index.html">← 都市一覧</a>
@@ -196,12 +196,14 @@
 <g class="fnodes"></g>
 </svg></div>
 <div class="legend" id="mklegend"></div>
-<div class="legend" id="fr-legend" hidden><span class="sw"><i class="ln" style="background:#2a78d6"></i>Truck</span><span class="sw"><i class="ln" style="background:#1baf7a"></i>Rail</span><span class="sw"><i class="ln" style="background:#eb6834"></i>複合輸送</span><span class="sw"><i class="ln" style="background:#8a8986"></i>Other</span><span class="sw"><i class="sym dia"></i>その他の FAF 地域</span><span class="sw"><i class="sym dia hollow"></i>Rest of（地域全体）</span><span class="sw"><i class="sym sq"></i>Port</span></div>
+<div class="legend" id="fr-legend" hidden><span class="sw"><i class="ln" style="background:#2a78d6"></i>Truck</span><span class="sw"><i class="ln" style="background:#1baf7a"></i>Rail</span><span class="sw"><i class="ln" style="background:#eb6834"></i>複合輸送</span><span class="sw"><i class="ln" style="background:#8a8986"></i>Other</span><span class="sw"><i class="ln dash"></i>Truck 中心・Rail＋複合 3割以上</span><span class="sw"><i class="sym dia"></i>その他の FAF 地域</span><span class="sw"><i class="sym dia hollow"></i>Rest of（地域全体）</span><span class="sw"><i class="sym sq"></i>Port</span></div>
 <div class="mkcard" id="mkcard" aria-live="polite"><p class="muted small">円をタップすると、その市場の数値を表示します。</p></div>
 <p class="meta" id="fr-status" hidden></p>
 <details class="method" id="fr-method" hidden><summary>貨物流動（FAF）の見方と注意</summary>
 <p>FAF（Freight Analysis Framework、米国運輸省 FHWA・BTS）は、発地 × 着地 × 品目 × 輸送機関 × 重量・金額の<b>推計</b>の貨物流動データです。ここでは国内の区間（dms_orig → dms_dest）の重量を使っています。輸入は入口の港などから国内の着地まで、輸出は国内の発地から出口までの区間です。</p>
 <p>FAF からは、実際に使われた道路、個々の倉庫を経由したかどうか、同じ貨物の Rail → Truck の積み替え、個々のコンテナの動きは分かりません。Mode の比率の違いは、拠点の機能と<b>整合する</b>ことを示すにとどまり、積み替えを示すものではありません。</p>
+<p>線の色は区間で一番重い Mode です。Truck が一番多くても Rail＋複合輸送が3割以上ある線は点線にしています。FAF の元になる調査（CFS）では、トラック会社に任せた貨物は途中を鉄道（インターモーダル）で運ばれても Truck と回答されることがあり、Truck が多めに出ることがあります。</p>
+<p>輸入は「通関した場所」が国内の入口になります。LA/LB などで揚がり保税のまま鉄道で内陸（Chicago など）へ運ばれて内陸で通関した輸入は、FAF では内陸への直接の輸入として数えられ、港 ⇄ 内陸の線には含まれません（太平洋航路の鉄道インターモーダルの大きな部分）。このため、港から内陸への長距離の線は実際より Truck に偏って見えることがあります。点の詳細の「海外からの輸入（この地域で通関）」で、その規模を確かめられます。</p>
 <p>「倉庫関連」は、物流不動産の分析のために設定した独自の品目分類（SCTG 05–09・21・23・24・26–30・33–40・43）で、FAF の公式分類ではありません。</p>
 <p>「複合輸送」は FAF の「Multiple Modes &amp; Mail」です。Rail と Truck の間の特定の積み替えだけを意味するものではありません。「Other」は水運・航空・パイプライン・不明などです。</p>
 <p>点は FAF Zone（CFS Area など）です。1つの Zone に複数の市場があるとき（例：Los Angeles Zone＝LA・OC・Inland Empire）は1つの点にまとめ、どの市場をタップしても同じ Zone の値を表示します。「Rest of 〇〇」は州の残りの地域の合計で、1つの都市ではありません。同じ点の中の流動は数えていません。単位 Mt は百万ショートトン（FAF の千ショートトンを換算）。</p>
@@ -383,6 +385,8 @@ const comLabel=()=>(net.commodities.find(c=>c.key===st.com)||{}).label,modeLabel
 const tradeLabel=()=>(net.trades.find(t=>t.key===st.trade)||{}).label;
 const domMode=a=>a&&a.some(v=>v>0)?BK[a.indexOf(Math.max(...a))]:null;
 const lineColor=modes=>st.mode==='all'?COL[domMode(modes)||'other']:COL[st.mode];
+// Truck が一番多くても Rail＋複合輸送が3割以上ある線は点線（利用者の決定 2026-10-30）。Mode＝すべてのときだけ
+const mixed=modes=>{if(st.mode!=='all'||!modes)return false;const t=modes.reduce((s,v)=>s+v,0);return t>0&&domMode(modes)==='truck'&&(modes[1]+modes[2])/t>=0.3;};
 const marketOf=k=>{const c=circles.find(c=>c.dataset.k===k);return c?D.data[+c.dataset.i]:null;};
 // ---- 表示の切り替え ----
 const layerBtns=[...document.querySelectorAll('#mklayer button')];
@@ -398,6 +402,7 @@ for(let i=0;i<=12;i++){const t=i/12,u=1-t;pts.push([u*u*a.x+2*u*t*mx+t*t*b.x,u*u
 return {d:'M'+a.x+','+a.y+'Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+b.x+','+b.y,pts};};
 const addLine=(a,b,w,op,col,info)=>{const c=curve(a,b);const p=document.createElementNS('http://www.w3.org/2000/svg','path');
 p.setAttribute('d',c.d);p.setAttribute('stroke',col);p.setAttribute('stroke-width',w.toFixed(2));p.setAttribute('stroke-opacity',op);p.setAttribute('vector-effect','non-scaling-stroke');
+if(mixed(info.modes)){p.setAttribute('stroke-dasharray',(Math.max(4,w*1.6)).toFixed(1)+' '+(Math.max(3,w*1.1)).toFixed(1));p.setAttribute('stroke-linecap','butt');}
 flows.appendChild(p);drawn.push({pts:c.pts,w,info});};
 let shown=new Set();
 const symbols=()=>{fn.innerHTML='';if(!net||svg.dataset.mode!=='freight')return;const u=pxu(),s=5*u;let h='';
@@ -443,6 +448,11 @@ segH('dir',[['both','双方向'],['in','流入'],['out','流出']],st.dir)+segH(
 (n.port?'<p class="meta">輸入：港 → 内陸（流出側）、輸出：内陸 → 港（流入側）が中心です。</p>':'')+'</div>';
 if(!f){h+='<p class="muted">この条件の流動はありません。</p>';body.innerHTML=h;open(false);return;}
 h+='<div class="sec"><div class="kv"><span>流入</span><b>'+mt(f.i)+' Mt</b></div><div class="kv"><span>流出</span><b>'+mt(f.o)+' Mt</b></div></div>';
+// 海外からの輸入のうち、この地域で通関した分（国内の入口）。内陸で海上輸入が大きいのは、港から保税で運ばれて内陸で通関した貨物とみられる
+const en=nd.ent&&nd.ent[st.com];
+if(en&&en[0]+en[1]+en[2]>=100){h+='<div class="sec"><div class="st">海外からの輸入（この地域で通関、'+esc(comLabel())+'）</div><div class="kv"><span>海上</span><b>'+mt(en[0])+' Mt</b></div><div class="kv"><span>航空</span><b>'+mt(en[1])+' Mt</b></div><div class="kv"><span>陸路など（カナダ・メキシコ国境）</span><b>'+mt(en[2])+' Mt</b></div>'+
+(n.port?'<p class="meta">この港で揚がっても、保税のまま鉄道などで内陸へ運ばれ内陸で通関した輸入は、FAF では内陸側の輸入として数えられ、ここには含まれず、この港からの線にも出ません。</p>'
+:en[0]>=500?'<p class="meta">港のない内陸で「海上」の輸入として数えられている分は、西海岸などの港で揚がり、保税のまま鉄道などで運ばれてこの地域で通関した貨物とみられます。FAF ではこの区間（港 ⇄ この地域）は国内流動に含まれず、地図の線にも出ません。</p>':'')+'</div>';}
 if(f.mi)h+='<div class="sec"><div class="st">Mode Mix（流入）</div>'+bars(f.mi,f.i)+'<div class="st">Mode Mix（流出）</div>'+bars(f.mo,f.o)+'<p class="meta">流入と流出の Mode の比率の違いは、拠点の機能（積み替え・地域配送など）と整合するかを見る目安です。FAF では同じ貨物の積み替えは追跡できません。</p></div>';
 h+='<div class="sec"><div class="st">Top Origins（流入の上位5件）</div>'+topList(f,'in')+'<div class="st">Top Destinations（流出の上位5件）</div>'+topList(f,'out')+'</div>';
 const ct=f.i+f.o;if(f.com&&f.com.length)h+='<div class="sec"><div class="st">Commodity Mix（上位5品目、双方向の重量）</div><ol class="toplist">'+f.com.map(c=>'<li><span>'+esc(net.sctgName[c[0]]||c[0])+'</span><b>'+pc(c[1],ct)+'</b></li>').join('')+'</ol></div>';
@@ -450,7 +460,8 @@ body.innerHTML=h;open(sheet.classList.contains('full'));}
 function showLine(i){const a=byId[i.a],b=byId[i.b];let h='<h4>'+esc(a.label)+' ⇄ '+esc(b.label)+'</h4>';
 if(i.type==='pair')h+='<div class="kv"><span>双方向</span><b>'+mt(i.kt)+' Mt</b></div><div class="kv"><span>'+esc(a.label)+' → '+esc(b.label)+'</span><b>'+mt(i.ab)+' Mt</b></div><div class="kv"><span>'+esc(b.label)+' → '+esc(a.label)+'</span><b>'+mt(i.ba)+' Mt</b></div><p class="meta">全国 '+i.rank+' 位'+(i.supp?'（線のない地域を補った代表の線）':'')+'・品目：'+esc(comLabel())+'・Mode：'+esc(modeLabel())+'</p>';
 else h+='<div class="kv"><span>双方向</span><b>'+mt(i.in+i.out)+' Mt</b></div><div class="kv"><span>流入（'+esc(b.label)+' → '+esc(a.label)+'）</span><b>'+mt(i.in)+' Mt</b></div><div class="kv"><span>流出（'+esc(a.label)+' → '+esc(b.label)+'）</span><b>'+mt(i.out)+' Mt</b></div><p class="meta">品目：'+esc(comLabel())+'・Mode：'+esc(modeLabel())+'・取引：'+esc(tradeLabel())+'</p>';
-if(st.mode==='all'&&i.modes){const t=i.modes.reduce((s,v)=>s+v,0);h+='<div class="st">Mode の内訳</div>'+bars(i.modes,t);}
+if(st.mode==='all'&&i.modes){const t=i.modes.reduce((s,v)=>s+v,0);h+='<div class="st">Mode の内訳</div>'+bars(i.modes,t)+(mixed(i.modes)?'<p class="meta">点線：Truck が一番多いが、Rail＋複合輸送も3割以上あります。</p>':'');}
+h+='<p class="meta">FAF の元になる調査（CFS）では、トラック会社に任せた貨物は途中を鉄道（インターモーダル）で運ばれても Truck と回答されることがあり、Truck が多めに出ることがあります。港で揚がり保税のまま鉄道で内陸へ運ばれ、内陸で通関した輸入は、FAF では内陸側への直接の輸入として数えられ、港 ⇄ 内陸の線には含まれません。</p>';
 h+='<p class="meta">複合輸送＝FAF の「Multiple Modes &amp; Mail」（Rail と Truck の積み替えだけを意味するものではありません）。</p>';body.innerHTML=h;open(false);}
 body.addEventListener('click',e=>{const b=e.target.closest('[data-ctl] button');if(!b)return;const ctl=b.parentElement.dataset.ctl;st[ctl]=b.dataset.v;
 if(ctl==='trade'&&st.sel&&byId[st.sel].port){if(st.trade==='imp')st.dir='out';else if(st.trade==='exp')st.dir='in';}draw();});
