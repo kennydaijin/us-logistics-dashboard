@@ -21,6 +21,12 @@ main{max-width:880px;margin:0 auto;padding:0 16px 24px}
 .city-list .en,.city-list .upd{font-size:.8rem;color:var(--gray);margin-right:8px}
 section h2{font-size:1.05rem;color:var(--navy);margin:24px 0 8px;border-left:4px solid var(--navy);padding-left:8px}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mmtoggle{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.mmlabel{display:inline-block;font-size:.8rem;color:var(--gray);border:1px solid var(--line);border-radius:14px;padding:4px 12px;margin:0 0 8px;cursor:pointer;background:#fff}
+.mmlabel::after{content:"▸ 時点・出典などを表示"}
+.mmtoggle:checked+.mmlabel::after{content:"▾ 時点・出典などを隠す"}
+.mmtoggle:focus-visible+.mmlabel{outline:2px solid var(--navy);outline-offset:2px}
+.mmtoggle:not(:checked)~.cards .meta,.mmtoggle:not(:checked)~.mmarea{display:none}
 @media(min-width:640px){.cards{grid-template-columns:repeat(4,1fr)}}
 .card{border:1px solid var(--line);border-radius:8px;padding:10px;background:#fff}
 .card.empty{background:var(--soft)}
