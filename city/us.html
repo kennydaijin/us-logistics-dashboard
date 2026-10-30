@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>全米｜米国物流マーケット</title>
-<link rel="stylesheet" href="../style.css?v=2c854a57c6">
+<link rel="stylesheet" href="../style.css?v=90d61af3dd">
 </head>
 <body>
 <header class="top city"><a class="back" href="../index.html">← 都市一覧</a>
@@ -434,7 +434,7 @@ t.querySelectorAll('th.sortable').forEach(h=>h.removeAttribute('aria-sort'));th.
 const q=document.getElementById(P+'q'),o=document.getElementById(P+'ours');if(!q||!o)return;const hide=el=>{const s=q.value.trim().toLowerCase();return (s&&!el.dataset.name.includes(s))||(o.checked&&!el.classList.contains('ours'));};
 const f=()=>{[...body.rows].forEach(r=>{r.hidden=hide(r);});document.querySelectorAll('#'+P+'map circle.mk').forEach(c=>{const off=hide(c);c.classList.toggle('off',off);c.style.display=off?'none':'';});};
 q.addEventListener('input',f);o.addEventListener('change',f);});['mk','mf','sm'].forEach(P=>{const svg=document.getElementById(P+'map');if(!svg)return;
-const D=JSON.parse(document.getElementById(P+'data').textContent),M=D.metrics,W=960,H=600;
+const D=JSON.parse(document.getElementById(P+'data').textContent),M=D.metrics,W=svg.viewBox.baseVal.width||960,H=svg.viewBox.baseVal.height||600;
 const circles=[...svg.querySelectorAll('circle.mk')];
 const card=document.getElementById(P+'card'),leg=document.getElementById(P+'legend');
 const segs=[...document.querySelectorAll('#'+P+'views button[data-view]')],mbtn=[...document.querySelectorAll('#'+P+'metrics [data-metric]')];
