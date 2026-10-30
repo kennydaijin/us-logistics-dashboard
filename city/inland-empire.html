@@ -311,7 +311,8 @@ if(e.pointerType!=='mouse'&&now-lastTap<320&&lastXY&&Math.hypot(e.clientX-lastXY
 else{lastTap=now;lastXY=[e.clientX,e.clientY];
 // 貨物流動の表示中は、タップを貨物流動の処理に渡す（市場の数値カードは出さない）
 if(svg.dataset.mode==='freight')svg.dispatchEvent(new CustomEvent('ftap',{detail:{clientX:e.clientX,clientY:e.clientY}}));
-else if(svg.dataset.mode!=='net'){const c=nearest(e);if(c)show(+c.dataset.i);}}}
+else if(svg.dataset.mode==='net')svg.dispatchEvent(new CustomEvent('ntap',{detail:{clientX:e.clientX,clientY:e.clientY}}));
+else{const c=nearest(e);if(c)show(+c.dataset.i);}}}
 if(pts.size===1){const p=[...pts.values()][0];start={x:p.x,y:p.y,vb:vb.slice()};moved=true;}else if(!pts.size)start=null;};
 svg.addEventListener('pointerup',end);svg.addEventListener('pointercancel',end);
 svg.addEventListener('wheel',e=>{e.preventDefault();const [x,y]=at(e);zoomAt(e.deltaY<0?1.25:0.8,x,y);},{passive:false});

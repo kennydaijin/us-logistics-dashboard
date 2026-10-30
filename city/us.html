@@ -185,7 +185,7 @@
 <div class="mk-tools"><input id="mkq" class="search" type="search" placeholder="市場名で絞り込み（例：Texas、TX、Dallas）" aria-label="市場名で絞り込み"><label class="small"><input type="checkbox" id="mkours"> ★の市場だけ表示</label></div>
 <div class="seg" id="mkviews" role="tablist" aria-label="表示の切り替え"><button type="button" data-view="map" aria-selected="true">地図</button><button type="button" data-view="table" aria-selected="false">表</button></div>
 <div id="mkview-map"><div class="seg wide" id="mklayer" role="tablist" aria-label="地図の表示"><button type="button" data-layer="re" aria-selected="true">物流不動産</button><button type="button" data-layer="freight" aria-selected="false">貨物流動</button><button type="button" data-layer="net" aria-selected="false">交通網</button></div>
-<div class="map-tools" id="net-tools" hidden><div class="seg3" role="group" aria-label="交通網の種類"><button type="button" data-net="hw" aria-pressed="true">高速道路</button><button type="button" data-net="rail" aria-pressed="false">鉄道</button></div></div>
+<div class="map-tools" id="net-tools" hidden><div class="seg3" role="group" aria-label="交通網の種類"><button type="button" data-net="hw" aria-pressed="true">高速道路</button><button type="button" data-net="rail" aria-pressed="false">鉄道</button><button type="button" data-net="port" aria-pressed="false">港</button></div></div>
 <div class="map-tools" id="re-tools"><div class="chips" id="mkmetrics" aria-label="色の指標"><button type="button" data-metric="vacancy" aria-pressed="true">空室率</button><button type="button" data-metric="vac_chg" aria-pressed="false">空室率 前年差</button><button type="button" data-metric="rent_chg" aria-pressed="false">賃料 前年比</button></div></div>
 <div class="map-tools" id="fr-tools" hidden>
 <div class="seg3" role="group" aria-label="品目"><button type="button" data-com="all">全貨物</button><button type="button" data-com="wr" aria-pressed="true">倉庫関連</button><button type="button" id="fr-com-more">品目 ▼</button></div>
@@ -200,10 +200,12 @@
 </svg></div>
 <div class="legend" id="mklegend"></div>
 <div class="legend" id="net-legend" hidden></div>
+<div class="mkcard" id="net-card" hidden aria-live="polite"></div>
 <p class="meta" id="net-status" hidden></p>
 <details class="method" id="net-method" hidden><summary>交通網の見方と注意</summary>
 <p><b>高速道路</b>：インターステートのうち番号が2桁以下の幹線（I-5・I-10・I-95 など。I-35E のような分岐を含む）。データ：U.S. Census Bureau TIGER/Line Primary Roads（2024）。</p>
 <p><b>鉄道</b>：大手6社（Class I：UP・BNSF・CSX・NS・CPKC・CN）の本線を、線路の所有者で色分けしています（他社の線路を使う運行は所有者の色）。データ：米国運輸省 BTS NTAD「North American Rail Network Lines」（FRA）。</p>
+<p><b>港</b>：2025年の取扱量（総 TEU、空コンテナを含む）の上位15港（ハワイ・プエルトリコ・アラスカを除く。シアトル・タコマは港湾連合 NWSA で1つ）。取扱量・積荷ありの輸入／輸出：PMSA「December 2025 TEUs」（各港の発表値のまとめ。チャールストン・ジャクソンビルは12月分が未発表の時点の値）。オンドック鉄道のあるターミナル数：米国運輸省 BTS「Port Performance Freight Statistics 2025 Annual Report」（2024年12月時点）。鉄道で運んだコンテナ：各港の公表値（LA・ロングビーチは取扱量×オンドック約25%の推計）。乗り入れる大手鉄道：BTS NTAD の鉄道ターミナルの記載（LA・ロングビーチ・ニューオーリンズは補足）。インランドコンテナターミナル：BTS NTAD で Inland Port とあるもののうちコンテナを扱うもの＋ジョージア港湾局 Gainesville Inland Port（2026年5月開業）。</p>
 <p>線路ごとの実際の通過トン数は公開されていないため、「主要な線路」は推計で選んでいます：FAF6（2022年）の鉄道（Rail）の国内区間の貨物量を、発地・着地の FAF の点から最寄りの本線へ結び、大手6社の本線網の最短経路（会社をまたぐ乗り換えは 200km 分の遠回りとみなす）に割り振った推計貨物量です。①推計 500万トン/年 以上の区間、②発地と着地が 1,500km 以上離れた長距離の貨物が 200万トン/年 以上通る区間（東西を結ぶ長距離輸送の幹線）、③各社の主要な長距離回廊（BNSF・UP の LA〜シカゴ、シアトル・オークランド〜シカゴ、CSX・NS のシカゴ〜ニューヨーク・ニュージャージー、CN のシカゴ〜ニューオーリンズ、CPKC のシカゴ〜カンザスシティ〜ラレドなど。その会社の線路の最短経路）、④その間の短い区間（途切れの補修）を表示し、太さは推計貨物量で3段階（5,000万トン以上・2,000万〜5,000万トン・それ以外）です。実際の運行経路・会社の使い分けとは違うことがあります。FAF の Rail には、インターモーダル（コンテナ）の一部が含まれない場合があります（CFS の回答で Truck・複合輸送になるもの）。このため、次の2つを推計に加えています（利用者の指示：インターモーダルの幹線を実態に近づける）。<br>（1）国内のインターモーダル：FAF の「複合輸送（Multiple Modes）」のうち発着 1,500km 以上（約1.4億トン）を鉄道として扱う。<br>（2）港の鉄道コンテナ：港で揚がり保税のまま鉄道で内陸へ運ばれて内陸で通関した輸入は FAF の港⇄内陸の区間に出てこないため、各港が公表している鉄道のコンテナ量（LA/LB 約287万個〔2025年 2,010万TEU×オンドック約25%〕、シアトル・タコマ 約97万個〔国際 242万TEU×約70%〕、NY/NJ 約71万個、バージニア 約78万個、サバンナ 約55万個）を1個10トンの目安で重さに直し（計 約5,900万トン）、FAF でその港から800km以上離れた着地へ向かう海上輸入（倉庫関連の品目）と内陸で通関した海上輸入の割合で行き先へ振り分け、西海岸は BNSF・UP、東海岸は CSX・NS で半分ずつ（仮定）その会社の線路に乗せています。オークランド・チャールストンなど公表値の見つからない港、港で積み替えて国内のコンテナで運ぶ輸入（トランスロード）は含みません。どれも目安の仮定を含む推計で、実際の通過トン数とは違います。</p>
 </details>
 <div class="legend" id="fr-legend" hidden><span class="sw"><i class="ln" style="background:#2a78d6"></i>Truck</span><span class="sw"><i class="ln" style="background:#1baf7a"></i>Rail</span><span class="sw"><i class="ln" style="background:#eb6834"></i>複合輸送</span><span class="sw"><i class="ln" style="background:#8a8986"></i>Other</span><span class="sw"><i class="ln dash"></i>Truck 中心・Rail＋複合 3割以上</span><span class="sw"><i class="sym dia"></i>その他の FAF 地域</span><span class="sw"><i class="sym dia hollow"></i>Rest of（地域全体）</span><span class="sw"><i class="sym sq"></i>Port</span></div>
@@ -482,7 +484,8 @@ if(e.pointerType!=='mouse'&&now-lastTap<320&&lastXY&&Math.hypot(e.clientX-lastXY
 else{lastTap=now;lastXY=[e.clientX,e.clientY];
 // 貨物流動の表示中は、タップを貨物流動の処理に渡す（市場の数値カードは出さない）
 if(svg.dataset.mode==='freight')svg.dispatchEvent(new CustomEvent('ftap',{detail:{clientX:e.clientX,clientY:e.clientY}}));
-else if(svg.dataset.mode!=='net'){const c=nearest(e);if(c)show(+c.dataset.i);}}}
+else if(svg.dataset.mode==='net')svg.dispatchEvent(new CustomEvent('ntap',{detail:{clientX:e.clientX,clientY:e.clientY}}));
+else{const c=nearest(e);if(c)show(+c.dataset.i);}}}
 if(pts.size===1){const p=[...pts.values()][0];start={x:p.x,y:p.y,vb:vb.slice()};moved=true;}else if(!pts.size)start=null;};
 svg.addEventListener('pointerup',end);svg.addEventListener('pointercancel',end);
 svg.addEventListener('wheel',e=>{e.preventDefault();const [x,y]=at(e);zoomAt(e.deltaY<0?1.25:0.8,x,y);},{passive:false});
@@ -620,14 +623,46 @@ const draw=()=>{if(!on)return;if(!data){g.innerHTML='';return;}let h='';
 if(view==='hw'){h=data.highways.map(x=>p(x.d,'#152a46',1.8,x.n)).join('');
 leg.innerHTML='<span class="sw"><i class="ln" style="background:#152a46"></i>インターステート（I-2桁、'+data.highways.length+'路線）</span>';
 status.textContent='高速道路：インターステートの幹線（番号が2桁以下）。円（市場）は灰色で表示しています。';}
+else if(view==='port'){
+// 港：大きさ＝2025年の TEU。背景に主要な鉄道路線を薄い灰色で。インランドコンテナターミナルはひし形
+for(const r of data.rail)for(const d of r.cls)if(d)h+=p(d,'#c3c8cf',1,'');
+const mx=Math.max(...data.ports.map(x=>x.teu));
+h+=data.inland.map((x,i)=>'<polygon class="ntp" data-t="i'+i+'" data-r="9" points="" fill="#fff" stroke="#152a46" stroke-width="2.5" vector-effect="non-scaling-stroke" data-x="'+x.x+'" data-y="'+x.y+'"><title>'+esc(x.name)+'</title></polygon>').join('');
+h+=data.ports.slice().sort((a,b)=>b.teu-a.teu).map(x=>'<circle class="ntp" data-t="p'+data.ports.indexOf(x)+'" data-r="'+(6+20*Math.sqrt(x.teu/mx)).toFixed(1)+'" cx="'+x.x+'" cy="'+x.y+'" r="0" fill="#152a46" fill-opacity="0.85" stroke="#fff" stroke-width="1.5" vector-effect="non-scaling-stroke"><title>'+esc(x.name)+'</title></circle>').join('');
+leg.innerHTML='<span class="sw"><i style="background:#152a46;border-radius:50%"></i>港（大きさ＝2025年の取扱量 TEU。上位15港）</span><span class="sw"><i style="background:#fff;border:2px solid #152a46;transform:rotate(45deg);border-radius:1px"></i>インランドコンテナターミナル</span><span class="sw"><i class="ln" style="background:#c3c8cf"></i>主要な鉄道路線</span>';
+status.textContent='港：港やインランドコンテナターミナルをタップすると、取扱量などの数字が出ます。出典は下の「交通網の見方と注意」。';}
 else{for(let ci=2;ci>=0;ci--)for(const r of data.rail){if(only&&only!==r.k)continue;if(r.cls[ci])h+=p(r.cls[ci],COL[r.k],W[ci],r.label);}
 leg.innerHTML='<span class="lt">鉄道会社（押すとその会社だけ表示）</span>'+data.rail.map(r=>'<button type="button" class="sw rr" data-rr="'+r.k+'" aria-pressed="'+(only===r.k)+'"><i class="ln" style="background:'+COL[r.k]+'"></i>'+esc(r.label)+'</button>').join('')
 +'<span class="lt">線の太さ（推計貨物量）</span><span class="sw"><i class="ln" style="background:#555;height:4px"></i>5,000万トン/年 以上</span><span class="sw"><i class="ln" style="background:#555;height:3px"></i>2,000万〜5,000万</span><span class="sw"><i class="ln" style="background:#555;height:1.5px"></i>それ以外の主要路線</span>';
 leg.querySelectorAll('[data-rr]').forEach(b=>b.addEventListener('click',()=>{only=only===b.dataset.rr?null:b.dataset.rr;draw();}));
 status.textContent='鉄道：大手6社の主要路線（推計貨物量と東西の長距離輸送で選定。詳しくは下の「交通網の見方と注意」）'+(only?'。表示中：'+data.rail.find(r=>r.k===only).label+' だけ（もう一度押すと全社）':'')+'。';}
-g.innerHTML=h;};
+g.innerHTML=h;mk(view!=='port');card.hidden=view!=='port';if(view==='port'&&!sel)card.innerHTML='<p class="muted small">港・インランドコンテナターミナルをタップすると、ここに数字が出ます。</p>';size();};
+// 港の記号の大きさ：地図を拡大しても大きくなりすぎないように（市場の円と同じく 1/√倍率）
+const card=$('net-card');let sel=null;
+// 港を選んでいる間は市場の円を隠す（灰色の円と港の円が紛らわしいため）。絞り込みで隠れている円はそのまま
+const mk=show=>svg.querySelectorAll('circle.mk').forEach(c=>{c.style.display=show&&!c.classList.contains('off')?'':'none';});
+const size=()=>{const vb=svg.getAttribute('viewBox').split(' ').map(Number),z=960/vb[2],k=1/Math.sqrt(z);
+g.querySelectorAll('.ntp').forEach(el=>{const r=+el.dataset.r*k*(el.dataset.t===sel?1.25:1);if(el.tagName==='circle')el.setAttribute('r',r.toFixed(2));else{const x=+el.dataset.x,y=+el.dataset.y;el.setAttribute('points',[[x,y-r],[x+r,y],[x,y+r],[x-r,y]].map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' '));}
+el.setAttribute('stroke',el.dataset.t===sel?'#eb6834':(el.tagName==='circle'?'#fff':'#152a46'));});};
+svg.addEventListener('mkzoom',()=>{if(on&&view==='port')size();});
+const man=v=>(v/1e4).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万';
+const sg=v=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(1)+'%';
+const showPort=t=>{sel=t;size();
+if(t[0]==='p'){const x=data.ports[+t.slice(1)];
+card.innerHTML='<h4>'+esc(x.name)+' <span class="muted small">'+esc(x.en)+'</span></h4><dl>'
++'<dt>2025年の取扱量</dt><dd>'+man(x.teu)+' TEU（前年比 '+sg(x.chg)+'）・上位15港の '+x.rank+'位</dd>'
++'<dt>積荷あり 輸入／輸出</dt><dd>'+man(x.imp)+'／'+man(x.exp)+' TEU</dd>'
++'<dt>オンドック鉄道</dt><dd>'+esc(x.ondock.split('/')[1])+' ターミナルのうち '+esc(x.ondock.split('/')[0])+'（2024年12月）</dd>'
++(x.railBoxes?'<dt>鉄道で運んだコンテナ</dt><dd>約'+man(x.railBoxes)+'個'+(x.railShared?'（LA・ロングビーチ合計の推計）':'（公表値）')+'</dd>':'')
++'<dt>乗り入れる大手鉄道</dt><dd>'+esc(x.railroads.join('・')||'—')+'</dd></dl>'+(x.note?'<p class="meta">'+esc(x.note)+'</p>':'');}
+else{const x=data.inland[+t.slice(1)];
+card.innerHTML='<h4>'+esc(x.name)+' <span class="muted small">インランドコンテナターミナル</span></h4><dl><dt>結ぶ港</dt><dd>'+esc(x.port)+'</dd><dt>鉄道会社</dt><dd>'+esc(x.railroads.join('・')||'—')+'</dd></dl>';}};
+svg.addEventListener('ntap',e=>{if(!on||view!=='port'||!data)return;const b=svg.getBoundingClientRect(),vb=svg.getAttribute('viewBox').split(' ').map(Number),k=b.width/vb[2];
+let best=null,bd=1e9;g.querySelectorAll('.ntp').forEach(el=>{const x=el.tagName==='circle'?+el.getAttribute('cx'):+el.dataset.x,y=el.tagName==='circle'?+el.getAttribute('cy'):+el.dataset.y;
+const px=b.left+(x-vb[0])*k,py=b.top+(y-vb[1])*k,d=Math.hypot(px-e.detail.clientX,py-e.detail.clientY);if(d<bd){bd=d;best=el;}});
+if(best&&bd<=30)showPort(best.dataset.t);});
 document.querySelectorAll('[data-net]').forEach(b=>b.addEventListener('click',()=>{view=b.dataset.net;document.querySelectorAll('[data-net]').forEach(x=>x.setAttribute('aria-pressed',x===b));draw();}));
-svg.addEventListener('netlayer',e=>{on=e.detail;if(!on){g.innerHTML='';return;}status.textContent='交通網のデータを読み込み中…';
+svg.addEventListener('netlayer',e=>{on=e.detail;if(!on){g.innerHTML='';card.hidden=true;mk(true);return;}status.textContent='交通網のデータを読み込み中…';
 load().then(draw).catch(()=>{status.textContent='交通網のデータがまだありません（PC で node scripts/build-transport.mjs を実行してから公開してください）。';});});})();</script>
 </body>
 </html>
