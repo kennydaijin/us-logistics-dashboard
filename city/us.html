@@ -51,6 +51,7 @@
 <h4>各社の見解が異なる点</h4><p>1つ目は賃料の伸びです。C&amp;Wは前年比+4.0%で伸びが加速しているとする一方、Colliersは+0.7%で横ばい圏としています。2つ目は空室率の水準で、CBREの6.4%からColliersの7.2%まで差があります。3つ目は第3四半期の需要の勢いです。CBREとColliersは2022年以来の最高としていますが、JLLは前期からの減速としています。4つ目は建設中面積で、CBREは2億7,800万SF（前年比+9.3%）と、他の3社（前年比+19〜28.7%）より規模も伸び率も小さくなっています。</p>
 <p class="meta">使用したレポート：CBRE（2026年 第3四半期）、JLL（2026年 第3四半期）、Cushman &amp; Wakefield（2026年 第3四半期）、Colliers（2026年 第3四半期）<br>作成：2026/10/29 00:22（日本時間）（claude-opus-5-5）<br>※各社で集計地域・指標の定義が異なるため、数値は平均・統一していません。</p>
 </div>
+
 <details class="report">
 <summary><span class="co">CBRE</span><span>2026年 第3四半期</span></summary>
 <div class="body">
@@ -421,18 +422,18 @@
 </div></section></div>
 </main>
 <footer class="foot">保存済みのデータのみを表示しています。要約は AI が作成したもので、原資料の確認を前提としています。</footer>
-<script>document.getElementById('more').addEventListener('click',e=>{const h=[...document.querySelectorAll('.news li.more[hidden]')].slice(0,10);h.forEach(li=>li.hidden=false);if(!document.querySelector('.news li.more[hidden]'))e.target.remove();});(()=>{const tabs=[...document.querySelectorAll('.tabs button')],panels=[...document.querySelectorAll('.tabpanel')];
+<script>document.getElementById('more').addEventListener('click',e=>{const h=[...document.querySelectorAll('.news li.more[hidden]')].slice(0,10);h.forEach(li=>li.hidden=false);if(!document.querySelector('.news li.more[hidden]'))e.target.remove();});(()=>{const tabs=[...document.querySelectorAll('.tabs button')],panels=[...document.querySelectorAll('.tabpanel')];if(!panels.length)return;
 const show=id=>{if(!panels.some(p=>p.id===id))id=panels[0].id;panels.forEach(p=>p.hidden=p.id!==id);tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===id));};
 tabs.forEach(b=>b.addEventListener('click',()=>{show(b.dataset.tab);history.replaceState(null,'','#'+b.dataset.tab);}));
 show((location.hash||'#overview').slice(1));window.addEventListener('hashchange',()=>show(location.hash.slice(1)));})();
-['mk','mf'].forEach(P=>{const t=document.getElementById(P);if(!t)return;const body=t.querySelector('tbody.list');let last=-1,dir=1;
+['mk','mf','sm'].forEach(P=>{const t=document.getElementById(P);if(!t)return;const body=t.querySelector('tbody.list');let last=-1,dir=1;
 t.querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click',()=>{const k=+th.dataset.k;dir=k===last?-dir:(k===0?1:-1);last=k;
 const rows=[...body.rows];rows.sort((a,b)=>{const x=a.cells[k].dataset.v,y=b.cells[k].dataset.v;if(x===''&&y==='')return 0;if(x==='')return 1;if(y==='')return -1;
 const nx=+x,ny=+y;return (isNaN(nx)||isNaN(ny)?x.localeCompare(y):nx-ny)*dir;});rows.forEach(r=>body.appendChild(r));
 t.querySelectorAll('th.sortable').forEach(h=>h.removeAttribute('aria-sort'));th.setAttribute('aria-sort',dir>0?'ascending':'descending');}));
-const q=document.getElementById(P+'q'),o=document.getElementById(P+'ours');const hide=el=>{const s=q.value.trim().toLowerCase();return (s&&!el.dataset.name.includes(s))||(o.checked&&!el.classList.contains('ours'));};
+const q=document.getElementById(P+'q'),o=document.getElementById(P+'ours');if(!q||!o)return;const hide=el=>{const s=q.value.trim().toLowerCase();return (s&&!el.dataset.name.includes(s))||(o.checked&&!el.classList.contains('ours'));};
 const f=()=>{[...body.rows].forEach(r=>{r.hidden=hide(r);});document.querySelectorAll('#'+P+'map circle.mk').forEach(c=>{const off=hide(c);c.classList.toggle('off',off);c.style.display=off?'none':'';});};
-q.addEventListener('input',f);o.addEventListener('change',f);});['mk','mf'].forEach(P=>{const svg=document.getElementById(P+'map');if(!svg)return;
+q.addEventListener('input',f);o.addEventListener('change',f);});['mk','mf','sm'].forEach(P=>{const svg=document.getElementById(P+'map');if(!svg)return;
 const D=JSON.parse(document.getElementById(P+'data').textContent),M=D.metrics,W=960,H=600;
 const circles=[...svg.querySelectorAll('circle.mk')];
 const card=document.getElementById(P+'card'),leg=document.getElementById(P+'legend');
