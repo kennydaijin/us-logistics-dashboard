@@ -645,7 +645,10 @@ let hwSel=null,hwP=null,hwA=null;
 const hwParse=()=>{if(hwP)return;hwP=data.highways.map(x=>x.d.split('M').filter(Boolean).map(s=>s.split('L').map(q=>q.split(',').map(Number))));
 hwA=[];hwP.forEach((lines,i)=>{for(const l of lines){let acc=20;for(let j=1;j<l.length;j++){const d=Math.hypot(l[j][0]-l[j-1][0],l[j][1]-l[j-1][1]);acc+=d;if(acc>=45){hwA.push([i,l[j][0],l[j][1]]);acc=0;}}}});};
 const hwCard=()=>{const n=data.highways[hwSel].n,m=/^I-(\d+)([EWNS])?$/.exec(n),num=m?+m[1]:0;
-card.innerHTML='<h4>'+esc(n)+'</h4><p>'+(num%2?'南北方向':'東西方向')+'の幹線（インターステートは奇数の番号が南北、偶数の番号が東西）'+(m&&m[2]?'。I-'+num+' が2つに分かれる区間（'+(m[2]==='E'?'東':m[2]==='W'?'西':m[2]==='N'?'北':'南')+'側）':'')+'。</p><p class="muted small">もう一度同じ線をタップすると強調を外します。</p>';};
+card.innerHTML='<h4>'+esc(n)+'</h4><p>'+(num%2?'南北方向':'東西方向')+'の幹線（インターステートは奇数の番号が南北、偶数の番号が東西）'+(m&&m[2]?'。I-'+num+' が2つに分かれる区間（'+(m[2]==='E'?'東':m[2]==='W'?'西':m[2]==='N'?'北':'南')+'側）':'')+'。</p>'
+// 主な通過都市（太字＝地図の○の都市＝物流マーケット）。西→東、または北→南の順
++((data.highways[hwSel].cities||[]).length?'<p><b>主な通過都市</b>（'+(num%2?'北→南':'西→東')+'）：'+data.highways[hwSel].cities.map(c=>c.m?'<b>'+esc(c.n)+'</b>':esc(c.n)).join(' → ')+'</p><p class="muted small">太字は地図の○の都市（物流マーケット）。路線から約40km以内の物流マーケットと、約15km以内の人口15万人以上の都市（Natural Earth）から最大10〜12都市。</p>':'')
++'<p class="muted small">もう一度同じ線をタップすると強調を外します。</p>';};
 const hwLabels=()=>{const lab=g.querySelector('.hwlab');if(!lab)return;lab.innerHTML='';if(!on||view!=='hw'||!data)return;
 const vb=svg.getAttribute('viewBox').split(' ').map(Number),z=960/vb[2];if(z<1.9)return;hwParse();
 const k=(svg.clientWidth||960)/vb[2],u=1/k,boxes=[];let html='';
