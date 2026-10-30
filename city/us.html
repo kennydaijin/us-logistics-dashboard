@@ -620,7 +620,7 @@ const load=()=>loading||(loading=fetch(base+'transport.json').then(r=>{if(!r.ok)
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 const p=(d,c,w,t)=>'<path d="'+d+'" stroke="'+c+'" stroke-width="'+w+'" vector-effect="non-scaling-stroke">'+(t?'<title>'+esc(t)+'</title>':'')+'</path>';
 const draw=()=>{if(!on)return;if(!data){g.innerHTML='';return;}let h='';
-if(view==='hw'){h=data.highways.map(x=>p(x.d,'#152a46',1.8,x.n)).join('')+(hwSel!=null?p(data.highways[hwSel].d,'#eb6834',4,data.highways[hwSel].n):'')+'<g class="hwlab"></g>';
+if(view==='hw'){h=data.highways.map(x=>p(x.d,'#152a46',1.8,x.n)).join('')+(hwSel!=null?p(data.highways[hwSel].d,hwCol(hwSel),4,data.highways[hwSel].n):'')+'<g class="hwlab"></g>';
 leg.innerHTML='<span class="sw"><i class="ln" style="background:#152a46"></i>インターステート（I-2桁、'+data.highways.length+'路線）</span>';
 status.textContent='高速道路：インターステートの幹線（番号が2桁以下）。線をタップすると番号が出ます。2本指で拡大すると線に番号が出ます。';}
 else if(view==='port'){
@@ -642,10 +642,12 @@ if(view==='hw'&&hwSel!=null)hwCard();size();hwLabels();};
 // ---- 高速道路の番号：画面を増やさずに分かるように（利用者の指示）----
 // ①線をタップするとその路線全体をオレンジで強調し、下に番号　②2倍以上に拡大したときだけ、見えている範囲に番号の看板（重なるものは出さない）
 let hwSel=null,hwP=null,hwA=null;
+// 強調の色：東西（偶数番号）＝オレンジ、南北（奇数番号）＝アクア（利用者の指示。dataviz の検証で2色は色覚の個人差があっても見分けられる。説明にも方向の文字と色見本を出す）
+const hwCol=i=>{const m=/^I-(\d+)/.exec(data.highways[i].n);return m&&+m[1]%2?'#1baf7a':'#eb6834';};
 const hwParse=()=>{if(hwP)return;hwP=data.highways.map(x=>x.d.split('M').filter(Boolean).map(s=>s.split('L').map(q=>q.split(',').map(Number))));
 hwA=[];hwP.forEach((lines,i)=>{for(const l of lines){let acc=20;for(let j=1;j<l.length;j++){const d=Math.hypot(l[j][0]-l[j-1][0],l[j][1]-l[j-1][1]);acc+=d;if(acc>=45){hwA.push([i,l[j][0],l[j][1]]);acc=0;}}}});};
 const hwCard=()=>{const n=data.highways[hwSel].n,m=/^I-(\d+)([EWNS])?$/.exec(n),num=m?+m[1]:0;
-card.innerHTML='<h4>'+esc(n)+'</h4><p>'+(num%2?'南北方向':'東西方向')+'の幹線（インターステートは奇数の番号が南北、偶数の番号が東西）'+(m&&m[2]?'。I-'+num+' が2つに分かれる区間（'+(m[2]==='E'?'東':m[2]==='W'?'西':m[2]==='N'?'北':'南')+'側）':'')+'。</p>'
+card.innerHTML='<h4><i style="display:inline-block;width:18px;height:5px;border-radius:3px;vertical-align:middle;margin-right:6px;background:'+hwCol(hwSel)+'"></i>'+esc(n)+'</h4><p>'+(num%2?'南北方向':'東西方向')+'の幹線（インターステートは奇数の番号が南北、偶数の番号が東西）'+(m&&m[2]?'。I-'+num+' が2つに分かれる区間（'+(m[2]==='E'?'東':m[2]==='W'?'西':m[2]==='N'?'北':'南')+'側）':'')+'。</p>'
 // 主な通過都市（太字＝地図の○の都市＝物流マーケット）。西→東、または北→南の順
 +((data.highways[hwSel].cities||[]).length?'<p><b>主な通過都市</b>（'+(num%2?'北→南':'西→東')+'）：'+data.highways[hwSel].cities.map(c=>c.m?'<b>'+esc(c.n)+'</b>':esc(c.n)).join(' → ')+'</p><p class="muted small">太字は地図の○の都市（物流マーケット）。路線から約40km以内の物流マーケットと、約15km以内の人口15万人以上の都市（Natural Earth）から最大10〜12都市。</p>':'')
 +'<p class="muted small">もう一度同じ線をタップすると強調を外します。</p>';};
@@ -654,7 +656,7 @@ const vb=svg.getAttribute('viewBox').split(' ').map(Number),z=960/vb[2];if(z<1.9
 const k=(svg.clientWidth||960)/vb[2],u=1/k,boxes=[];let html='';
 for(const [i,x,y] of hwA){if(x<vb[0]||x>vb[0]+vb[2]||y<vb[1]||y>vb[1]+vb[3])continue;const n=data.highways[i].n,w=(n.length*7.2+10)*u,hh=17*u,bx=[x-w/2,y-hh/2,w,hh];
 if(boxes.some(b=>bx[0]<b[0]+b[2]+4*u&&bx[0]+bx[2]+4*u>b[0]&&bx[1]<b[1]+b[3]+4*u&&bx[1]+bx[3]+4*u>b[1]))continue;boxes.push(bx);
-html+='<g><rect x="'+bx[0].toFixed(2)+'" y="'+bx[1].toFixed(2)+'" width="'+w.toFixed(2)+'" height="'+hh.toFixed(2)+'" rx="'+(3*u).toFixed(2)+'" fill="'+(i===hwSel?'#eb6834':'#152a46')+'" stroke="#fff" stroke-width="'+(1.2*u).toFixed(2)+'"/><text x="'+x.toFixed(2)+'" y="'+y.toFixed(2)+'" font-size="'+(11*u).toFixed(2)+'" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">'+esc(n)+'</text></g>';
+html+='<g><rect x="'+bx[0].toFixed(2)+'" y="'+bx[1].toFixed(2)+'" width="'+w.toFixed(2)+'" height="'+hh.toFixed(2)+'" rx="'+(3*u).toFixed(2)+'" fill="'+(i===hwSel?hwCol(i):'#152a46')+'" stroke="#fff" stroke-width="'+(1.2*u).toFixed(2)+'"/><text x="'+x.toFixed(2)+'" y="'+y.toFixed(2)+'" font-size="'+(11*u).toFixed(2)+'" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">'+esc(n)+'</text></g>';
 if(boxes.length>=60)break;}
 lab.innerHTML=html;};
 svg.addEventListener('mkzoom',()=>{if(on&&view==='hw')hwLabels();});
