@@ -620,9 +620,9 @@ const load=()=>loading||(loading=fetch(base+'transport.json').then(r=>{if(!r.ok)
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 const p=(d,c,w,t)=>'<path d="'+d+'" stroke="'+c+'" stroke-width="'+w+'" vector-effect="non-scaling-stroke">'+(t?'<title>'+esc(t)+'</title>':'')+'</path>';
 const draw=()=>{if(!on)return;if(!data){g.innerHTML='';return;}let h='';
-if(view==='hw'){h=data.highways.map(x=>p(x.d,'#152a46',1.8,x.n)).join('');
+if(view==='hw'){h=data.highways.map(x=>p(x.d,'#152a46',1.8,x.n)).join('')+(hwSel!=null?p(data.highways[hwSel].d,'#eb6834',4,data.highways[hwSel].n):'')+'<g class="hwlab"></g>';
 leg.innerHTML='<span class="sw"><i class="ln" style="background:#152a46"></i>インターステート（I-2桁、'+data.highways.length+'路線）</span>';
-status.textContent='高速道路：インターステートの幹線（番号が2桁以下）。円（市場）は灰色で表示しています。';}
+status.textContent='高速道路：インターステートの幹線（番号が2桁以下）。線をタップすると番号が出ます。2本指で拡大すると線に番号が出ます。';}
 else if(view==='port'){
 // 港：大きさ＝2025年の TEU。背景に主要な鉄道路線を薄い灰色で。インランドコンテナターミナルはひし形
 for(const r of data.rail)for(const d of r.cls)if(d)h+=p(d,'#c3c8cf',1,'');
@@ -636,7 +636,29 @@ leg.innerHTML='<span class="lt">鉄道会社（押すとその会社だけ表示
 +'<span class="lt">線の太さ（推計貨物量）</span><span class="sw"><i class="ln" style="background:#555;height:4px"></i>5,000万トン/年 以上</span><span class="sw"><i class="ln" style="background:#555;height:3px"></i>2,000万〜5,000万</span><span class="sw"><i class="ln" style="background:#555;height:1.5px"></i>それ以外の主要路線</span>';
 leg.querySelectorAll('[data-rr]').forEach(b=>b.addEventListener('click',()=>{only=only===b.dataset.rr?null:b.dataset.rr;draw();}));
 status.textContent='鉄道：大手6社の主要路線（推計貨物量と東西の長距離輸送で選定。詳しくは下の「交通網の見方と注意」）'+(only?'。表示中：'+data.rail.find(r=>r.k===only).label+' だけ（もう一度押すと全社）':'')+'。';}
-g.innerHTML=h;mk(view!=='port');card.hidden=view!=='port';if(view==='port'&&!sel)card.innerHTML='<p class="muted small">港・インランドコンテナターミナルをタップすると、ここに数字が出ます。</p>';size();};
+g.innerHTML=h;mk(view!=='port');card.hidden=view==='rail';if(view==='port'&&!sel)card.innerHTML='<p class="muted small">港・インランドコンテナターミナルをタップすると、ここに数字が出ます。</p>';
+if(view==='hw'&&hwSel==null)card.innerHTML='<p class="muted small">高速道路の線をタップすると、その路線の番号が出ます。地図を拡大すると線に番号が出ます。</p>';
+if(view==='hw'&&hwSel!=null)hwCard();size();hwLabels();};
+// ---- 高速道路の番号：画面を増やさずに分かるように（利用者の指示）----
+// ①線をタップするとその路線全体をオレンジで強調し、下に番号　②2倍以上に拡大したときだけ、見えている範囲に番号の看板（重なるものは出さない）
+let hwSel=null,hwP=null,hwA=null;
+const hwParse=()=>{if(hwP)return;hwP=data.highways.map(x=>x.d.split('M').filter(Boolean).map(s=>s.split('L').map(q=>q.split(',').map(Number))));
+hwA=[];hwP.forEach((lines,i)=>{for(const l of lines){let acc=20;for(let j=1;j<l.length;j++){const d=Math.hypot(l[j][0]-l[j-1][0],l[j][1]-l[j-1][1]);acc+=d;if(acc>=45){hwA.push([i,l[j][0],l[j][1]]);acc=0;}}}});};
+const hwCard=()=>{const n=data.highways[hwSel].n,m=/^I-(\d+)([EWNS])?$/.exec(n),num=m?+m[1]:0;
+card.innerHTML='<h4>'+esc(n)+'</h4><p>'+(num%2?'南北方向':'東西方向')+'の幹線（インターステートは奇数の番号が南北、偶数の番号が東西）'+(m&&m[2]?'。I-'+num+' が2つに分かれる区間（'+(m[2]==='E'?'東':m[2]==='W'?'西':m[2]==='N'?'北':'南')+'側）':'')+'。</p><p class="muted small">もう一度同じ線をタップすると強調を外します。</p>';};
+const hwLabels=()=>{const lab=g.querySelector('.hwlab');if(!lab)return;lab.innerHTML='';if(!on||view!=='hw'||!data)return;
+const vb=svg.getAttribute('viewBox').split(' ').map(Number),z=960/vb[2];if(z<1.9)return;hwParse();
+const k=(svg.clientWidth||960)/vb[2],u=1/k,boxes=[];let html='';
+for(const [i,x,y] of hwA){if(x<vb[0]||x>vb[0]+vb[2]||y<vb[1]||y>vb[1]+vb[3])continue;const n=data.highways[i].n,w=(n.length*7.2+10)*u,hh=17*u,bx=[x-w/2,y-hh/2,w,hh];
+if(boxes.some(b=>bx[0]<b[0]+b[2]+4*u&&bx[0]+bx[2]+4*u>b[0]&&bx[1]<b[1]+b[3]+4*u&&bx[1]+bx[3]+4*u>b[1]))continue;boxes.push(bx);
+html+='<g><rect x="'+bx[0].toFixed(2)+'" y="'+bx[1].toFixed(2)+'" width="'+w.toFixed(2)+'" height="'+hh.toFixed(2)+'" rx="'+(3*u).toFixed(2)+'" fill="'+(i===hwSel?'#eb6834':'#152a46')+'" stroke="#fff" stroke-width="'+(1.2*u).toFixed(2)+'"/><text x="'+x.toFixed(2)+'" y="'+y.toFixed(2)+'" font-size="'+(11*u).toFixed(2)+'" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">'+esc(n)+'</text></g>';
+if(boxes.length>=60)break;}
+lab.innerHTML=html;};
+svg.addEventListener('mkzoom',()=>{if(on&&view==='hw')hwLabels();});
+const hwTap=e=>{hwParse();const b=svg.getBoundingClientRect(),vb=svg.getAttribute('viewBox').split(' ').map(Number),k=b.width/vb[2];
+const x=(e.detail.clientX-b.left)/k+vb[0],y=(e.detail.clientY-b.top)/k+vb[1];let best=-1,bd=1e9;
+hwP.forEach((lines,i)=>{for(const l of lines)for(let j=1;j<l.length;j++){const [x1,y1]=l[j-1],[x2,y2]=l[j],dx=x2-x1,dy=y2-y1,L=dx*dx+dy*dy||1;let t=((x-x1)*dx+(y-y1)*dy)/L;t=Math.max(0,Math.min(1,t));const d=Math.hypot(x-(x1+t*dx),y-(y1+t*dy));if(d<bd){bd=d;best=i;}}});
+if(best<0||bd*k>22)return;hwSel=hwSel===best?null:best;draw();};
 // 港の記号の大きさ：地図を拡大しても大きくなりすぎないように（市場の円と同じく 1/√倍率）
 const card=$('net-card');let sel=null;
 // 港を選んでいる間は市場の円を隠す（灰色の円と港の円が紛らわしいため）。絞り込みで隠れている円はそのまま
@@ -657,7 +679,7 @@ card.innerHTML='<h4>'+esc(x.name)+' <span class="muted small">'+esc(x.en)+'</spa
 +'<dt>乗り入れる大手鉄道</dt><dd>'+esc(x.railroads.join('・')||'—')+'</dd></dl>'+(x.note?'<p class="meta">'+esc(x.note)+'</p>':'');}
 else{const x=data.inland[+t.slice(1)];
 card.innerHTML='<h4>'+esc(x.name)+' <span class="muted small">インランドコンテナターミナル</span></h4><dl><dt>結ぶ港</dt><dd>'+esc(x.port)+'</dd><dt>鉄道会社</dt><dd>'+esc(x.railroads.join('・')||'—')+'</dd></dl>';}};
-svg.addEventListener('ntap',e=>{if(!on||view!=='port'||!data)return;const b=svg.getBoundingClientRect(),vb=svg.getAttribute('viewBox').split(' ').map(Number),k=b.width/vb[2];
+svg.addEventListener('ntap',e=>{if(on&&view==='hw'&&data)return hwTap(e);if(!on||view!=='port'||!data)return;const b=svg.getBoundingClientRect(),vb=svg.getAttribute('viewBox').split(' ').map(Number),k=b.width/vb[2];
 let best=null,bd=1e9;g.querySelectorAll('.ntp').forEach(el=>{const x=el.tagName==='circle'?+el.getAttribute('cx'):+el.dataset.x,y=el.tagName==='circle'?+el.getAttribute('cy'):+el.dataset.y;
 const px=b.left+(x-vb[0])*k,py=b.top+(y-vb[1])*k,d=Math.hypot(px-e.detail.clientX,py-e.detail.clientY);if(d<bd){bd=d;best=el;}});
 if(best&&bd<=30)showPort(best.dataset.t);});
