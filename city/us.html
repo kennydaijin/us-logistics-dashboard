@@ -660,10 +660,11 @@ html+='<g><rect x="'+bx[0].toFixed(2)+'" y="'+bx[1].toFixed(2)+'" width="'+w.toF
 if(boxes.length>=60)break;}
 lab.innerHTML=html;};
 svg.addEventListener('mkzoom',()=>{if(on&&view==='hw')hwLabels();});
-const hwTap=e=>{hwParse();const b=svg.getBoundingClientRect(),vb=svg.getAttribute('viewBox').split(' ').map(Number),k=b.width/vb[2];
+// lim＝線とみなす距離（画面上の px）。範囲内なら選んで true
+const hwTap=(e,lim=22)=>{hwParse();const b=svg.getBoundingClientRect(),vb=svg.getAttribute('viewBox').split(' ').map(Number),k=b.width/vb[2];
 const x=(e.detail.clientX-b.left)/k+vb[0],y=(e.detail.clientY-b.top)/k+vb[1];let best=-1,bd=1e9;
 hwP.forEach((lines,i)=>{for(const l of lines)for(let j=1;j<l.length;j++){const [x1,y1]=l[j-1],[x2,y2]=l[j],dx=x2-x1,dy=y2-y1,L=dx*dx+dy*dy||1;let t=((x-x1)*dx+(y-y1)*dy)/L;t=Math.max(0,Math.min(1,t));const d=Math.hypot(x-(x1+t*dx),y-(y1+t*dy));if(d<bd){bd=d;best=i;}}});
-if(best<0||bd*k>22)return;hwSel=hwSel===best?null:best;draw();};
+if(best<0||bd*k>lim)return false;hwSel=hwSel===best?null:best;draw();return true;};
 // 港の記号の大きさ：地図を拡大しても大きくなりすぎないように（市場の円と同じく 1/√倍率）
 const card=$('net-card');let sel=null;
 // 市場の円の表示（絞り込みで隠れている円はそのまま）。港の表示でも都市の円は出す（利用者の指示）
@@ -694,8 +695,9 @@ tip.innerHTML='<rect x="'+(x-w/2)+'" y="'+(y-h)+'" width="'+w+'" height="'+h+'" 
 clearTimeout(tipT);tipT=setTimeout(()=>{tip.innerHTML='';},2500);return true;};
 svg.addEventListener('netlayer',()=>{tip.innerHTML='';});
 svg.addEventListener('ntap',e=>{if(!on||!data)return;
-if(view!=='port'&&cityTap(e.detail))return; // 高速道路・鉄道：円の近くなら都市名（道路の強調より優先）
-if(view==='hw')return hwTap(e);if(view!=='port')return;const b=svg.getBoundingClientRect(),vb=svg.getAttribute('viewBox').split(' ').map(Number),k=b.width/vb[2];
+// 高速道路：線のすぐ近く（10px 以内）なら線を優先（円が密集した所でも線を選べるように。利用者の指示）→ 円の上なら都市名 → 少し離れた線（22px 以内）
+if(view==='hw'){if(hwTap(e,10))return;if(cityTap(e.detail))return;hwTap(e,22);return;}
+if(view!=='port'&&cityTap(e.detail))return; // 鉄道：円の近くなら都市名if(view!=='port')return;const b=svg.getBoundingClientRect(),vb=svg.getAttribute('viewBox').split(' ').map(Number),k=b.width/vb[2];
 let best=null,bd=1e9;g.querySelectorAll('.ntp').forEach(el=>{const x=el.tagName==='circle'?+el.getAttribute('cx'):+el.dataset.x,y=el.tagName==='circle'?+el.getAttribute('cy'):+el.dataset.y;
 const px=b.left+(x-vb[0])*k,py=b.top+(y-vb[1])*k,d=Math.hypot(px-e.detail.clientX,py-e.detail.clientY);if(d<bd){bd=d;best=el;}});
 if(best&&bd<=30)showPort(best.dataset.t);else cityTap(e.detail);}); // 港：港の記号を優先し、なければ都市名
