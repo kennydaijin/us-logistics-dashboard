@@ -117,6 +117,8 @@ main.wide{max-width:1200px}
 .chips .corrbtn[aria-pressed=true]{background:#2a78d6;color:#fff}
 .corrpanel{margin:6px 0}
 .corrrow{border-top:1px solid var(--line);padding:8px 0}
+.smnote ul{margin:6px 0 4px;padding-left:1.2em}
+.smnote li{margin:0 0 6px;line-height:1.6}
 .corrrow .ch{display:flex;justify-content:space-between;gap:8px;font-size:.95rem}
 .corrrow .ch span{font-weight:700;color:var(--navy-d);white-space:nowrap}
 #smmap circle.mk{fill-opacity:.72}
