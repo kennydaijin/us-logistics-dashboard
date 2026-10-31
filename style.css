@@ -110,6 +110,15 @@ main.wide{max-width:1200px}
 .mkmap circle.mk{stroke:#152a46;stroke-opacity:.55;stroke-width:1;vector-effect:non-scaling-stroke}
 .mkmap circle.mk.sel{stroke:#0b0b0b;stroke-opacity:1;stroke-width:3}
 .mkmap .off{display:none}
+.mkmap.corr-on .marks{opacity:.22}
+.mkmap.corr-on .exl{display:none}
+.mkmap.corr-on .poi{opacity:.35}
+.chips .corrbtn{border-color:#2a78d6;color:#1c5cab}
+.chips .corrbtn[aria-pressed=true]{background:#2a78d6;color:#fff}
+.corrpanel{margin:6px 0}
+.corrrow{border-top:1px solid var(--line);padding:8px 0}
+.corrrow .ch{display:flex;justify-content:space-between;gap:8px;font-size:.95rem}
+.corrrow .ch span{font-weight:700;color:var(--navy-d);white-space:nowrap}
 #smmap circle.mk{fill-opacity:.72}
 #smmap circle.mk.sel{fill-opacity:.9}
 .legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.78rem;color:var(--gray);margin:8px 0 4px}
