@@ -168,6 +168,15 @@ main.wide{max-width:1200px}
 details.method{font-size:.8rem;color:var(--gray);margin:6px 0;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
 details.method summary{cursor:pointer;color:var(--navy);font-weight:600}
 details.method p{margin:6px 0}
+.fcdetail select{max-width:100%;font-size:.85rem;margin:4px 0}
+.fcbody h4{margin:8px 0 4px;color:var(--navy);font-size:.9rem}
+table.fcin{border-collapse:collapse;font-size:.8rem;margin:4px 0}
+table.fcin caption{text-align:left;font-weight:600;color:var(--navy-d)}
+table.fcin th,table.fcin td{padding:2px 8px 2px 0;text-align:left;font-weight:400;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+ol.fcsteps{margin:6px 0;padding-left:1.4em;font-variant-numeric:tabular-nums}
+ol.fcsteps li{margin:3px 0;word-break:break-word}
+ol.fcsteps .k{display:block;font-weight:600;color:var(--navy-d)}
+.fcres{font-size:.9rem;color:var(--navy)}
 .sheet{position:fixed;left:0;right:0;bottom:0;height:30vh;max-height:85vh;background:#fff;border-radius:14px 14px 0 0;box-shadow:0 -4px 18px rgba(21,42,70,.18);z-index:30;display:flex;flex-direction:column;max-width:640px;margin:0 auto;transition:height .2s}
 .sheet.full{height:80vh}
 .sheet.picker{height:auto;max-height:70vh;z-index:31}
