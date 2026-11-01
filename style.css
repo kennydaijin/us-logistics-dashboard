@@ -180,6 +180,9 @@ svg.spark{display:block;overflow:visible}
 details.method{font-size:.8rem;color:var(--gray);margin:6px 0;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
 details.method summary{cursor:pointer;color:var(--navy);font-weight:600}
 details.method p{margin:6px 0}
+p.profile{background:var(--soft);border-radius:8px;padding:10px 12px;margin:4px 0 10px;font-size:.92rem;line-height:1.75}
+p.profile .pnote{display:block;margin-top:4px;font-size:.74rem;color:var(--gray)}
+p.profile[hidden]{display:none}
 .fcdetail select{max-width:100%;font-size:.85rem;margin:4px 0}
 .fcbody h4{margin:8px 0 4px;color:var(--navy);font-size:.9rem}
 table.fcin{border-collapse:collapse;font-size:.8rem;margin:4px 0}
