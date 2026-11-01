@@ -181,7 +181,14 @@ details.method{font-size:.8rem;color:var(--gray);margin:6px 0;border:1px solid v
 details.method summary{cursor:pointer;color:var(--navy);font-weight:600}
 details.method p{margin:6px 0}
 p.profile{background:var(--soft);border-radius:8px;padding:10px 12px;margin:4px 0 10px;font-size:.92rem;line-height:1.75}
-p.profile .pnote{display:block;margin-top:4px;font-size:.74rem;color:var(--gray)}
+.card.wide{grid-column:1/-1}
+.card .value.rich{font-size:1rem}
+.card .value .sub{display:block;font-size:.76rem;font-weight:400;color:#5b6672;margin-top:2px}
+.rbar{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:6px 0 4px;gap:2px;background:#fff}
+.rbar i{display:block;height:100%}
+.rlist{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:.78rem;font-weight:400;color:#1d2733}
+.rlist b{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:3px;vertical-align:-1px}
+.xcards{margin-top:8px}
 p.profile[hidden]{display:none}
 .fcdetail select{max-width:100%;font-size:.85rem;margin:4px 0}
 .fcbody h4{margin:8px 0 4px;color:var(--navy);font-size:.9rem}
