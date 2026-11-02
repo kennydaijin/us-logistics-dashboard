@@ -130,7 +130,7 @@ td.sp{padding-top:2px;padding-bottom:2px}
 svg.spark{display:block;overflow:visible}
 .trends{margin-top:8px;border-top:1px solid var(--line);padding-top:6px}
 .trends .trow{display:flex;align-items:center;gap:8px;margin:9px 0}
-.trends .tl{width:4.5em;font-size:.78rem;color:#5b6672;flex:none}
+.trends .tl{width:5.4em;font-size:.76rem;color:#5b6672;flex:none;white-space:nowrap}
 .chips button{border:1px solid var(--line);background:#fff;color:#1d2733;border-radius:999px;padding:4px 12px;font-size:.82rem;min-height:34px;cursor:pointer}
 .chips button[aria-pressed=true]{border-color:var(--navy);background:var(--navy);color:#fff}
 /* 全米の地図の指標4つは1行に（利用者の指示 2026-10-31）。狭い画面でも収まるよう少し小さく、収まらなければ横にスクロール */
