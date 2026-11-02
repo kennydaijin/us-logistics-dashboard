@@ -119,6 +119,8 @@ main.wide{max-width:1200px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .hwpick{font:inherit;font-size:.85rem;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:#fff;color:#1d2733;min-height:36px;max-width:100%}
 .hwpick[hidden]{display:none}
+#net-tools{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px}
+#net-tools .hwpick{flex:1 1 7em;min-width:7em}
 .qslider{display:flex;align-items:center;gap:8px;font-size:.82rem;color:#1d2733}
 .qslider[hidden]{display:none}
 .qslider input{flex:1;max-width:260px;accent-color:#152a46}

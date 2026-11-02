@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>全米｜米国物流マーケット</title>
-<link rel="stylesheet" href="../style.css?v=70832e0394">
+<link rel="stylesheet" href="../style.css?v=2f66896300">
 </head>
 <body>
 <header class="top city"><a class="back" href="../index.html">← 都市一覧</a>
@@ -641,7 +641,7 @@ const p=(d,c,w,t)=>'<path d="'+d+'" stroke="'+c+'" stroke-width="'+w+'" vector-e
 const draw=()=>{if(!on)return;if(!data){g.innerHTML='';return;}let h='';
 if(view==='hw'){h=data.highways.map(x=>p(x.d,'#152a46',1.8,x.n)).join('')+(hwSel!=null?p(data.highways[hwSel].d,hwCol(hwSel),4,data.highways[hwSel].n):'')+'<g class="hwlab"></g>';
 leg.innerHTML='<span class="sw"><i class="ln" style="background:#152a46"></i>インターステート（I-2桁、'+data.highways.length+'路線）</span>';
-status.textContent='高速道路：インターステートの幹線（番号が2桁以下）。線をタップすると番号が出ます。2本指で拡大すると線に番号が出ます。';}
+status.textContent='';}
 else if(view==='port'){
 // 港：大きさ＝2025年の TEU。都市（市場）の円はほかの表示と同じく灰色で出す（利用者の指示：港に道路の線はいらない）。インランドコンテナターミナルはひし形
 
@@ -670,10 +670,9 @@ const hwCol=i=>{const m=/^I-(\d+)/.exec(data.highways[i].n);return m&&+m[1]%2?'#
 const hwParse=()=>{if(hwP)return;hwP=data.highways.map(x=>x.d.split('M').filter(Boolean).map(s=>s.split('L').map(q=>q.split(',').map(Number))));
 hwA=[];hwP.forEach((lines,i)=>{for(const l of lines){let acc=20;for(let j=1;j<l.length;j++){const d=Math.hypot(l[j][0]-l[j-1][0],l[j][1]-l[j-1][1]);acc+=d;if(acc>=45){hwA.push([i,l[j][0],l[j][1]]);acc=0;}}}});};
 const hwCard=()=>{const n=data.highways[hwSel].n,m=/^I-(\d+)([EWNS])?$/.exec(n),num=m?+m[1]:0;
-card.innerHTML='<h4><i style="display:inline-block;width:18px;height:5px;border-radius:3px;vertical-align:middle;margin-right:6px;background:'+hwCol(hwSel)+'"></i>'+esc(n)+'</h4><p>'+(num%2?'南北方向':'東西方向')+'の幹線（インターステートは奇数の番号が南北、偶数の番号が東西）'+(m&&m[2]?'。I-'+num+' が2つに分かれる区間（'+(m[2]==='E'?'東':m[2]==='W'?'西':m[2]==='N'?'北':'南')+'側）':'')+'。</p>'
+card.innerHTML='<h4><i style="display:inline-block;width:18px;height:5px;border-radius:3px;vertical-align:middle;margin-right:6px;background:'+hwCol(hwSel)+'"></i>'+esc(n)+'</h4>'
 // 主な通過都市（太字＝地図の○の都市＝物流マーケット）。西→東、または北→南の順
-+((data.highways[hwSel].cities||[]).length?'<p><b>主な通過都市</b>（'+(num%2?'北→南':'西→東')+'）：'+data.highways[hwSel].cities.map(c=>c.m?'<b>'+esc(c.n)+'</b>':esc(c.n)).join(' → ')+'</p><p class="muted small">太字は地図の○の都市（物流マーケット）。路線から約40km以内の物流マーケットと、約15km以内の人口15万人以上の都市（Natural Earth）から最大10〜12都市。</p>':'')
-+'<p class="muted small">もう一度同じ線をタップすると強調を外します。</p>';};
++((data.highways[hwSel].cities||[]).length?'<p><b>主な通過都市</b>（'+(num%2?'北→南':'西→東')+'）：'+data.highways[hwSel].cities.map(c=>c.m?'<b>'+esc(c.n)+'</b>':esc(c.n)).join(' → ')+'</p>':'');};
 const hwLabels=()=>{const lab=g.querySelector('.hwlab');if(!lab)return;lab.innerHTML='';if(!on||view!=='hw'||!data)return;
 const vb=svg.getAttribute('viewBox').split(' ').map(Number),z=960/vb[2];if(z<1.9)return;hwParse();
 const k=(svg.clientWidth||960)/vb[2],u=1/k,boxes=[];let html='';
