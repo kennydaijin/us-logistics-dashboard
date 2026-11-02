@@ -741,10 +741,13 @@ cards.forEach(c=>c.classList.toggle('on',c.dataset.k===metric||metric.indexOf(c.
 // 上位10州の順位：値の大きい順（政党は区分なので出さない）。アラスカ・ハワイは順位に数えるが地図外なので番号は出ない
 const rk=svg.querySelector('.ranks');if(rk){rk.innerHTML='';if(metric!=='party'){
 const u=svg.viewBox.baseVal.width/(svg.clientWidth||svg.viewBox.baseVal.width);
-const list=Object.keys(D.states).map(a=>[a,D.states[a].v[metric]?D.states[a].v[metric][0]:null]).filter(x=>x[1]!=null&&isFinite(x[1])).sort((a,b)=>b[1]-a[1]).slice(0,10);let h='';
+const list=Object.keys(D.states).map(a=>[a,D.states[a].v[metric]?D.states[a].v[metric][0]:null]).filter(x=>x[1]!=null&&isFinite(x[1]));
+// 失業率と州法人税率は小さい順（利用者の指示 2026-11-02）。同じ値は同じ順位
+const asc=metric==='unemployment_rate'||metric==='corp_tax';list.sort((a,b)=>asc?a[1]-b[1]:b[1]-a[1]);
+const rank=v=>1+list.filter(x=>asc?x[1]<v:x[1]>v).length;list.forEach(x=>{x[2]=rank(x[1]);});list.splice(10);let h='';
 // 北東部の小さな州は番号が重なるので、地図の右側（海の上）に縦に並べて細い線で結ぶ
 const NE=['VT','NH','MA','RI','CT','NJ','DE','MD','DC'],VW=svg.viewBox.baseVal.width,side=[];
-const pts=list.map(([a],i)=>{const p=svg.querySelector('path[data-st="'+a+'"]');if(!p)return null;const b=p.getBBox(),o=RK_AT[a]||[0,0];return {a,i,cx:b.x+b.width/2+o[0],cy:b.y+b.height/2+o[1]};}).filter(Boolean);
+const pts=list.map(([a,,n])=>{const i=n-1;const p=svg.querySelector('path[data-st="'+a+'"]');if(!p)return null;const b=p.getBBox(),o=RK_AT[a]||[0,0];return {a,i,cx:b.x+b.width/2+o[0],cy:b.y+b.height/2+o[1]};}).filter(Boolean);
 pts.filter(q=>NE.includes(q.a)).sort((x,y)=>x.cy-y.cy).forEach(q=>{let y=q.cy;const last=side[side.length-1];if(last&&y<last.y+18*u)y=last.y+18*u;q.x=VW-10*u;q.y=y;side.push(q);h+='<line x1="'+q.cx.toFixed(1)+'" y1="'+q.cy.toFixed(1)+'" x2="'+q.x.toFixed(1)+'" y2="'+q.y.toFixed(1)+'" stroke="#152a46" stroke-width="'+(0.8*u).toFixed(2)+'"/><circle cx="'+q.cx.toFixed(1)+'" cy="'+q.cy.toFixed(1)+'" r="'+(1.6*u).toFixed(1)+'" fill="#152a46"/>';});
 pts.forEach(q=>{const i=q.i,x=q.x??q.cx,y=q.y??q.cy;
 h+='<g transform="translate('+x.toFixed(1)+','+y.toFixed(1)+')"><circle r="'+(8*u).toFixed(1)+'" fill="#fff" stroke="#152a46" stroke-width="'+(1.4*u).toFixed(1)+'"/><text font-size="'+(10*u).toFixed(1)+'" font-weight="700" fill="#152a46" text-anchor="middle" dominant-baseline="central">'+(i+1)+'</text></g>';});
