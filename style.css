@@ -25,6 +25,7 @@ section h2{font-size:1.05rem;color:var(--navy);margin:24px 0 8px;border-left:4px
 .card.pick.on{outline:2px solid var(--navy);outline-offset:-1px;background:#f5f8fc}
 .smacro{margin:0 0 10px}
 .smhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0 6px;font-size:1.05rem;color:var(--navy)}
+#smreset{white-space:nowrap;padding:4px 10px;font-size:.8rem;flex:none}
 .smsel{font:inherit;font-weight:700;color:var(--navy);border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:#fff;min-height:36px;max-width:100%;cursor:pointer}
 #stmap{display:block;width:100%;height:auto}
 #stmap path{cursor:pointer}
