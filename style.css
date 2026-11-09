@@ -131,6 +131,10 @@ td.sp{padding-top:2px;padding-bottom:2px}
 svg.spark{display:block;overflow:visible}
 .mtrend{border:1px solid var(--line);border-radius:8px;padding:8px 12px 4px;margin:8px 0 12px;background:#fff}
 .mtrend h3{margin:4px 0 0;font-size:.95rem;color:var(--navy)}
+.caprate{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;margin:2px 0 8px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.caprate .cl{font-size:.82rem;color:#5b6672}
+.caprate b{font-size:1.15rem;color:var(--navy-d)}
+.caprate .cs{font-size:.72rem;color:var(--gray)}
 .mtrend h3+.trends{margin-top:2px;border-top:0;padding-top:0}
 .trends{margin-top:8px;border-top:1px solid var(--line);padding-top:6px}
 .trends .trow{display:flex;align-items:center;gap:8px;margin:9px 0}
